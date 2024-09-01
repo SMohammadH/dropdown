@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styles from "./Dropdown.module.scss";
 import { useClickOutside } from "@/app/hooks/useClickOutside";
 import CategoryIcon from "./components/CategoryIcon";
@@ -24,6 +24,19 @@ const Dropdown = ({
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [filteredItems, setFilteredItems] = useState<DropdownType[]>([]);
+
+  useEffect(() => {
+    if (inputValue.length > 0) {
+      setFilteredItems(
+        items.filter((item) =>
+          item.value.includes(inputValue.toLocaleLowerCase())
+        )
+      );
+    } else {
+      setFilteredItems(items);
+    }
+  }, [inputValue, items]);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
@@ -73,7 +86,7 @@ const Dropdown = ({
 
       {isOpen && (
         <ul className={styles.dropdownMenu}>
-          {items.map((option) => (
+          {filteredItems.map((option) => (
             <li
               key={option.id}
               className={
