@@ -28,6 +28,7 @@ const Dropdown = ({
 
   useEffect(() => {
     if (inputValue.length > 0) {
+      setIsOpen(true);
       setFilteredItems(
         items.filter((item) =>
           item.value.includes(inputValue.toLocaleLowerCase())
