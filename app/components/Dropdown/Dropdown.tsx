@@ -97,7 +97,10 @@ const Dropdown = ({
                 <input
                   type="checkbox"
                   checked={selectedItems.includes(option)}
-                  onChange={() => handleItemClick(option)}
+                  onChange={() => {
+                    handleItemClick(option);
+                    setInputValue("");
+                  }}
                 />
                 <div>
                   {option.label}{" "}
