@@ -12,10 +12,17 @@ type DropdownProps = {
   items: DropdownType[];
   selectedItems: DropdownType[];
   handleItemClick: (arg0: DropdownType) => void;
+  addItem: (arg0: DropdownType) => void;
 };
 
-const Dropdown = ({ items, handleItemClick, selectedItems }: DropdownProps) => {
+const Dropdown = ({
+  items,
+  handleItemClick,
+  selectedItems,
+  addItem,
+}: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [inputValue, setInputValue] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
@@ -24,22 +31,46 @@ const Dropdown = ({ items, handleItemClick, selectedItems }: DropdownProps) => {
 
   useClickOutside(dropdownRef, closeDropdown);
 
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      addItem({
+        id: items[items.length - 1]?.id + 1,
+        label: inputValue.charAt(0).toUpperCase() + inputValue.slice(1),
+        value: inputValue,
+      });
+      setInputValue("");
+    }
+  };
+
   return (
-    <div className={styles.multiSelectDropdown} ref={dropdownRef}>
-      <button
-        onClick={toggleDropdown}
-        className={clsx(styles.dropdownToggle, { [styles.active]: isOpen })}
-      >
-        {selectedItems.length > 0
-          ? selectedItems.map((item) => item.value).join(", ")
-          : "Select..."}
+    <div className={styles.dropdown} ref={dropdownRef}>
+      <div className={styles.inputWrapper}>
+        <input
+          type="text"
+          value={inputValue}
+          onChange={handleInputChange}
+          onClick={toggleDropdown}
+          onKeyDown={handleKeyDown}
+          className={clsx(styles.dropdownInput, { [styles.active]: isOpen })}
+          placeholder={
+            selectedItems.length > 0
+              ? selectedItems.map((item) => item.value).join(", ")
+              : "Enter..."
+          }
+        />
         <Image
           src={isOpen ? "/icons/chevron-up.svg" : "/icons/chevron-down.svg"}
-          width={20}
-          height={20}
-          alt="arrow"
+          width={18}
+          height={18}
+          alt="chevron"
+          className={styles.chevronIcon}
         />
-      </button>
+      </div>
+
       {isOpen && (
         <ul className={styles.dropdownMenu}>
           {items.map((option) => (
@@ -55,10 +86,10 @@ const Dropdown = ({ items, handleItemClick, selectedItems }: DropdownProps) => {
                   checked={selectedItems.includes(option)}
                   onChange={() => handleItemClick(option)}
                 />
-                <p>
+                <div>
                   {option.label}{" "}
                   {option.iconDec && <CategoryIcon iconDec={option.iconDec} />}
-                </p>
+                </div>
                 <Image
                   src="/icons/check.svg"
                   width={22}

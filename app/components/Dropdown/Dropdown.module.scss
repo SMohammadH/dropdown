@@ -1,13 +1,21 @@
-.multiSelectDropdown {
+.dropdown {
   position: relative;
   display: inline-block;
 
-  button {
-    width: 400px;
+  input {
+    width: 360px;
     font-size: 16px;
   }
 
-  .dropdownToggle {
+  .chevronIcon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .dropdownInput {
     padding: 12px;
     cursor: pointer;
     background-color: #fff;
@@ -20,6 +28,10 @@
 
     &:hover {
       background-color: #f0f0f0;
+    }
+
+    &:focus {
+      outline: none;
     }
 
     &.active {
@@ -41,6 +53,7 @@
     border-radius: 12px;
     max-height: 200px;
     overflow-y: auto;
+    overflow-x: hidden;
 
     &::-webkit-scrollbar {
       width: 12px;

@@ -6,6 +6,7 @@ import { categories } from "@/app/data/categories";
 import { DropdownType } from "@/app/types/dropdownType";
 
 const CategoryDropdown = () => {
+  const [items, setItems] = useState<DropdownType[]>(categories);
   const [selectedItems, setSelectedItems] = useState<DropdownType[]>([]);
 
   const handleItemClick = (item: DropdownType) => {
@@ -18,11 +19,16 @@ const CategoryDropdown = () => {
     setSelectedItems(newSelectedItems);
   };
 
+  const addItem = (newItem: DropdownType) => {
+    setItems([...items, newItem]);
+  };
+
   return (
     <Dropdown
-      items={categories}
+      items={items}
       selectedItems={selectedItems}
       handleItemClick={handleItemClick}
+      addItem={addItem}
     />
   );
 };
